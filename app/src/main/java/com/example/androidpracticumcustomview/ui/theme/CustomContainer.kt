@@ -83,7 +83,7 @@ class CustomContainer @JvmOverloads constructor(
         child.post { // запускаем анимацию после того, как произойдет измерение и размещение
             child.animate()
                 .alpha(1f) // Анимация появления
-                .setDuration(2000)
+                .setDuration(VISIBILITY_ANIMATION_DURATION)
                 .start()
 
             val indexOfChild = indexOfChild(child)
@@ -95,8 +95,13 @@ class CustomContainer @JvmOverloads constructor(
             }
             child.animate()
                 .translationY(translation.toFloat()) // Анимация перемещения
-                .setDuration(5000)
+                .setDuration(TRANSLATION_ANIMATION_DURATION)
                 .start()
         }
+    }
+
+    private companion object {
+        private const val TRANSLATION_ANIMATION_DURATION = 5000L
+        private const val VISIBILITY_ANIMATION_DURATION = 2000L
     }
 }
