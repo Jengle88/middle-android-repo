@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.view.doOnLayout
 import androidx.core.view.isGone
 
 /*
@@ -80,24 +81,28 @@ class CustomContainer @JvmOverloads constructor(
         child.alpha = 0f
         super.addView(child)
 
-        child.post { // запускаем анимацию после того, как произойдет измерение и размещение
-            child.animate()
-                .alpha(1f) // Анимация появления
-                .setDuration(VISIBILITY_ANIMATION_DURATION)
-                .start()
-
-            val indexOfChild = indexOfChild(child)
-            val translationValue = height / 2 - child.measuredHeight
-            val translation = if (indexOfChild % 2 == 0) {
-                -translationValue // Если индекс четный, перемещаем вверх
-            } else {
-                translationValue // Если индекс нечетный, перемещаем вниз
-            }
-            child.animate()
-                .translationY(translation.toFloat()) // Анимация перемещения
-                .setDuration(TRANSLATION_ANIMATION_DURATION)
-                .start()
+        child.doOnLayout { // запускаем анимацию после того, как произойдет измерение и размещение
+            startAnimation(child)
         }
+    }
+
+    private fun startAnimation(child: View) {
+        child.animate()
+            .alpha(1f) // Анимация появления
+            .setDuration(VISIBILITY_ANIMATION_DURATION)
+            .start()
+
+        val indexOfChild = indexOfChild(child)
+        val translationValue = height / 2 - child.measuredHeight
+        val translation = if (indexOfChild % 2 == 0) {
+            -translationValue // Если индекс четный, перемещаем вверх
+        } else {
+            translationValue // Если индекс нечетный, перемещаем вниз
+        }
+        child.animate()
+            .translationY(translation.toFloat()) // Анимация перемещения
+            .setDuration(TRANSLATION_ANIMATION_DURATION)
+            .start()
     }
 
     private companion object {
